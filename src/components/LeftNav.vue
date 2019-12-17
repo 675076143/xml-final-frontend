@@ -1,6 +1,6 @@
 <template>
-    <Menu active-name="1" class="left-nav" @on-select="redirect">
-        <MenuItem v-for="menu in menus" :name="menu.key">
+    <Menu class="left-nav" @on-select="redirect">
+        <MenuItem v-for="menu in menus" :name="menu.key" :key="menu.key">
             <Icon :type="menu.icon" />
             {{menu.title}}
         </MenuItem>
@@ -10,12 +10,28 @@
 
 <script>
   import menuConfig from "../config/menuConfig";
+  import store from '../store'
   export default {
     name: "LeftNav",
     data(){
       return{
-        menus:menuConfig
+        menus:'',
+        user:store.state.user
       }
+    },
+    mounted() {
+      console.log('left-nav:mounted')
+      this.menus=[...menuConfig]
+      console.log('初始menu=>',menuConfig)
+      console.log('this.store.user=>',this.user)
+      console.log(this.user.role);
+      if(this.user.role === 'teacher'){
+        this.menus.splice(1,1)
+      }else if(this.user.role === 'student'){
+        this.menus.splice(0,2)
+      };
+      console.log('过滤后menu=>',this.menus)
+
     },
     methods:{
       redirect(name){

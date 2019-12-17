@@ -3,14 +3,14 @@
         <div style="display: flex; align-items: center;padding-bottom: 10px">成绩管理
             <Input v-model="searchData" style="width: 30%;margin-left: 10px" search enter-button="Search" placeholder="请输入学号" @on-search="search" />
         </div>
-        <Button slot="extra" type="primary" icon="md-add" @click="addModal=true">添加成绩</Button>
+        <Button slot="extra" type="primary" icon="md-add" @click="addModal=true" :disabled="showAction">添加成绩</Button>
         <Table border :columns="columns" :data="data">
             <template slot-scope="{ row }" slot="stuNo">
                 <strong>{{ row.stuNo }}</strong>
             </template>
             <template slot-scope="{ row, index }" slot="action">
-                <Button type="primary" size="small" style="margin-right: 5px" @click="initForm(index)">Edit</Button>
-                <Button type="error" size="small" @click="remove(index)">Delete</Button>
+                <Button :disabled="showAction" type="primary" size="small" style="margin-right: 5px" @click="initForm(index)">Edit</Button>
+                <Button :disabled="showAction" type="error" size="small" @click="remove(index)">Delete</Button>
             </template>
         </Table>
         <Modal
@@ -81,7 +81,7 @@
     reqUpdateUser,
     reqUsers
   } from "../api";
-
+  import store from '../store'
   export default {
     name: "Score",
     mounted() {
@@ -89,6 +89,7 @@
     },
     data() {
       return {
+        user:store.state.user,
         columns: [
           {
             title: '学号',
@@ -215,6 +216,16 @@
             }
           }
         })
+      }
+    },
+
+    computed:{
+      showAction(){
+        if(this.user.role==='student'){
+          return true
+        }else {
+          return false
+        }
       }
     }
   }
