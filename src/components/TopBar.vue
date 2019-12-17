@@ -15,8 +15,9 @@
         name: "TopBar",
         computed:{
             userInfo(){
+              console.log({...store.state.user})
                 if(store.state.user)
-                    return "欢迎您："+store.state.user
+                    return "欢迎您："+store.state.user.username
             }
         },
         methods:{
@@ -24,7 +25,7 @@
                 store.commit('setUser','')
                 storageUtils.removeUser()
                 this.$Message.success('logout')
-                this.$router.push('/')
+                this.$router.push('/login')
             }
         }
     }

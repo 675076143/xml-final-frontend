@@ -24,7 +24,7 @@ export default {
 <style scoped lang="less">
   .content{
     padding-left:190px;
-    padding-top: 49px;
+    padding-top: 59px;
     height: 100%;
     width: 100%;
   }

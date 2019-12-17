@@ -1,6 +1,8 @@
 <template>
     <Card>
-        <p style="text-align: left" slot="title">用户管理</p>
+        <div style="display: flex; align-items: center;padding-bottom: 10px">用户管理
+            <Input v-model="searchData" style="width: 30%;margin-left: 10px" search enter-button="Search" placeholder="请输入用户名" @on-search="search" />
+        </div>
         <Button slot="extra" type="primary" icon="md-add" @click="addModal=true">添加用户</Button>
         <Table border :columns="columns" :data="data">
             <template slot-scope="{ row }" slot="username">
@@ -63,7 +65,7 @@
 </template>
 
 <script>
-  import {reqAddUser, reqDeleteUser, reqUpdateUser, reqUsers} from "../api";
+  import {reqAddUser, reqDeleteUser, reqSearchUser, reqUpdateUser, reqUsers} from "../api";
 
   export default {
     name: "User",
@@ -93,6 +95,7 @@
             align: 'center'
           }
         ],
+        searchData:'',
         data: [],
         addModal: false,
         editModal:false,
@@ -125,6 +128,16 @@
     },
 
     methods: {
+      async search(){
+        console.log(this.searchData)
+        const result = await reqSearchUser(this.searchData,this)
+        console.log(result)
+        if (result.code === 200) {
+          this.data = result.data
+        } else {
+          this.$Message.error("查询用户信息失败！")
+        }
+      },
       initForm(index) {
         this.editData = this.data[index]
         this.editModal = true

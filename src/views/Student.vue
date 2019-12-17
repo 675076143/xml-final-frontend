@@ -1,6 +1,8 @@
 <template>
     <Card>
-        <p style="text-align: left" slot="title">用户管理</p>
+        <div style="display: flex; align-items: center;padding-bottom: 10px">学生管理
+            <Input v-model="searchData" style="width: 30%;margin-left: 10px" search enter-button="Search" placeholder="请输入学号" @on-search="search" />
+        </div>
         <Button slot="extra" type="primary" icon="md-add" @click="addModal=true">添加学生信息</Button>
         <Table border :columns="columns" :data="data">
             <template slot-scope="{ row }" slot="stuNo">
@@ -95,7 +97,7 @@
     reqAddStudent,
     reqAddUser,
     reqDeleteStudent,
-    reqDeleteUser,
+    reqDeleteUser, reqSearchScores, reqSearchStudents,
     reqStudents, reqUpdateStudent,
     reqUpdateUser,
     reqUsers
@@ -156,6 +158,7 @@
         deleteModal:false,
         deleteIndex:-1,
         deleteModalLoading:false,
+        searchData:'',
         addData: {
           stuNo:"",
           stuName:"",
@@ -197,6 +200,17 @@
     },
 
     methods: {
+      async search(){
+        console.log(this.searchData)
+        const result = await reqSearchStudents(this.searchData,this)
+        console.log(result)
+        if (result.code === 200) {
+          this.data = result.data
+          console.log(this.data)
+        } else {
+          this.$Message.error("查询成绩信息失败！")
+        }
+      },
       initForm(index) {
         this.editData = this.data[index]
         this.editModal = true
